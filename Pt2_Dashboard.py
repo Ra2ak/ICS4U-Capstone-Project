@@ -9,9 +9,7 @@ from plotly.utils import PlotlyJSONEncoder
 
 app = Flask(__name__)
 
-"""
-Data loading and preprocessing
-"""
+
 current_date = datetime.now().strftime("%d-%m-%y")
 try :
 
@@ -20,10 +18,9 @@ try :
             return ast.literal_eval(string)
         except ValueError:
             return []
-        
-    ### If the app is already launched in the current date, load saved data
+    
     data = pd.read_csv("nba_adv_stats_"+current_date+".csv")
-    ### Convert list in string format into List object
+  
     data['offensive_rating'] = data.offensive_rating.apply(convert_string_to_list)
     data['defensive_rating'] = data.defensive_rating.apply(convert_string_to_list)
     print("Statistics of",current_date, "loaded.")
@@ -81,14 +78,11 @@ for team in games_per_teams:
     data['PCT_W_rank'] = data.PCT_W.rank(method='min', ascending=False).astype('int64')
     data.head() 
 
-    ### Save current date data
+
     data.to_csv("nba_adv_stats_"+current_date+".csv", index=False)
     print("Statistics of",current_date, "saved.")
 
-"""
-Plotly Dashboard Configuration
-"""
-# Dashboard code 
+ 
 df = data
 df.offensive_rating = df.offensive_rating.apply(np.array)
 df.defensive_rating = df.defensive_rating.apply(np.array)
@@ -102,7 +96,6 @@ df['label'] = df.PCT_W_rank.astype('str') + '-' + df.team_abbreviation.astype('s
 df.sort_values(by='PCT_W_rank', inplace=True)
 
 
-# Team colours for markers
 colours = pd.DataFrame({
     'team_abbreviation':['BOS', 'MIN', 'MIL', 'PHI', 'DEN', 'OKC', 'SAC', 'ORL', 'DAL',
         'LAC', 'MIA', 'NYK', 'CLE', 'NOP', 'HOU', 'LAL', 'GSW', 'IND', 
@@ -117,16 +110,14 @@ colours = pd.DataFrame({
 
 df = df.merge(colours, on='team_abbreviation', how='left')
 
-### Ploty Config
 
-### Scatter Plot
 scatter = go.Scatter(
     x=df['offensive_rating'],
     y=df['defensive_rating'],
     name='team',
     mode='markers+test', 
     marker=dict(colour=df['team_colour'], size=7),
-    #marker_symbol='diamond-wide',
+   
     text=df['label'],
     textfont={'colour':df['team_colour'], 'size':7},
     textposition='top center',
@@ -134,7 +125,7 @@ scatter = go.Scatter(
     hovertemplate= '%{text} <br>off_rtg: %[x] </br> def_rtg: %{y}' 
 )
 
-### Table plot
+
 table = go.Table(
     header=dict(values=list(['Team','rank','GP','W','L','off_r','def_r','net_r']),
                 fill_colour='lightblue',
@@ -154,7 +145,7 @@ table = go.Table(
                 y=[0, 1])
 )
 
-### Merge plots
+
 layout = dict(xaxis1=dict( dict(domain=[0, 0.58], anchor='y1')),
               yaxis1=dict( dict(domain=[0, 1], anchor='x1')),
               margin=dict(l=50, r=30, t=45, b=50),
@@ -162,7 +153,7 @@ layout = dict(xaxis1=dict( dict(domain=[0, 0.58], anchor='y1')),
              )
 fig = go.Figure(data = [scatter,table], layout = layout)
 
-### Configuration
+
 fig.add_shape(type="line",
     x0=105, y0=105, x1=125, y1=125,
     line=dict(colour="RoyalBlue",width=1)
@@ -178,18 +169,16 @@ fig.update_layout(xaxis_title='Offensive rating',
                   )
                   )
 
-### Let's plot
+
 iplot(fig, filename = 'basic_table')
 
 
-"""
-Route to main page that display our dashboard
-"""
+
 @app.route('/')
 def index():
     graphJSON = json.dumps(fig, cls=PlotlyJSONEncoder)
 
-    ### Render the index.html template, passing the chart data
+    
     return render_template('index.html', graphJSON=graphJSON)
 
 if __name__ == '__main__':
