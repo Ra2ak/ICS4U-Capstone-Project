@@ -1,8 +1,19 @@
 The videos I watched to help me with this project are:
-https://www.youtube.com/watch?v=xiBXspqs0dk 
-https://www.youtube.com/watch?v=IELK56jIsEo 
-https://www.youtube.com/watch?v=NCyPY-jfb3I
-https://www.youtube.com/watch?v=H4xMO76o13g
+Video: How to Build a Basketball Player Data Explorer Web App in Python
+Source: https://www.youtube.com/watch?v=xiBXspqs0dk 
+Reason: To learn how to get playerb data and use it in code
+
+Video: How to Scrape NBA Stats API with Python
+Source: https://www.youtube.com/watch?v=IELK56jIsEo 
+Reason: To learn how to scrape NBA stats API with Python
+
+Video: How to Scrape NBA Data Using the nba_api Python Module
+Source: https://www.youtube.com/watch?v=NCyPY-jfb3I
+Reason: more insight on how to scrape NBA Data
+
+Video: Develop a Live Sports GUI App (Python Tkinter)
+Source: https://www.youtube.com/watch?v=H4xMO76o13g
+Reason: Looking at how he got the layot done for the actual website
 
 The Gpt promts I used were:
 What applications would I need to get NBA data
